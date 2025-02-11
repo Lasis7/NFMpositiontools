@@ -17,27 +17,19 @@ export function generateSpike(
     // let z_updated = z;
     switch (dir) {
       case 'x':
-        fs.appendFile(
-          'code.txt',
-          `Generated ${amount} spikes:\n`,
-          function () {}
-        );
+        fs.appendFileSync('code.txt', `Generated ${amount} spikes:\n`);
 
-        fs.appendFile('code.txt', '\n', function () {});
+        fs.appendFileSync('code.txt', '\n');
 
         for (let i = 0; i < amount; i++) {
           const x_cord = x_updated + dist;
           x_updated = x_cord;
-          fs.appendFile(
+          fs.appendFileSync(
             'code.txt',
-            `set(37,${x_cord},${y},${z},${angle})\n`,
-            function (err) {
-              if (err) {
-                return console.error(err);
-              }
-            }
+            `set(37,${x_cord},${y},${z},${angle})\n`
           );
         }
+        fs.appendFileSync('code.txt', '\n');
     }
   }
 }
