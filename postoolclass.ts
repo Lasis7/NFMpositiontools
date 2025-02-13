@@ -1,6 +1,11 @@
 import * as fs from 'fs';
 
-export function parseLine(codeline: string) {
+export function emptyFile() {
+  fs.writeFileSync('code.txt', '');
+  console.log('File emptied');
+}
+
+function parseLine(codeline: string) {
   const codeObj: { [key: string]: number } = {
     pieceNumber: 0,
     x: 0,
@@ -29,59 +34,77 @@ export function parseLine(codeline: string) {
   }
 }
 
-// if (numbers?.length === 4) {
-//   const indexes = [1, 2];
-//   const xy: number[] = indexes.map((i) => Number(numbers[i]));
-//   xy.push(0);
-//   return xy;
-// } else if (numbers?.length === 5) {
-//   const indexes = [1, 2, 3];
-//   const xyz: number[] = indexes.map((i) => Number(numbers[i]));
-//   return xyz;
-// } else {
-//   return -1;
-// }
-
 export function generateSpike(
   codeline: string,
-  dir: string,
-  dist: number,
+  axis: string,
+  spacing: number,
   amount: number
 ) {
   if (amount < 0) {
     return console.log('Amount needs to be a positive number');
   } else {
-    let pieceNumber = 0;
-    let x = 0;
-    let y = 0;
-    let z = 0;
-    let angle = 0;
     const xyz = parseLine(codeline);
     if (xyz === -1) {
       console.log('invalid line');
       return;
-    } else {
-      pieceNumber = xyz.pieceNumber;
-      x = xyz.x;
-      y = xyz.y;
-      z = xyz.z;
-      angle = xyz.angle;
     }
-    switch (dir) {
+    switch (axis) {
       case 'x':
-        fs.appendFileSync('code.txt', `Generated ${amount} spikes:\n`);
+        fs.appendFileSync(
+          'code.txt',
+          `Generated ${amount} spikes (axis: ${axis}):\n`
+        );
 
         fs.appendFileSync('code.txt', '\n');
 
         for (let i = 0; i < amount; i++) {
-          const x_cord = x + dist;
-          x = x_cord;
+          xyz.x += spacing;
           fs.appendFileSync(
             'code.txt',
-            `set(${pieceNumber},${x_cord},${y},${z},${angle})\n`
+            `set(${xyz.pieceNumber},${xyz.x},${xyz.y},${xyz.z},${xyz.angle})\n`
           );
         }
         fs.appendFileSync('code.txt', '\n');
+        console.log('Generating completed');
+        break;
+      case 'y':
+        fs.appendFileSync(
+          'code.txt',
+          `Generated ${amount} spikes (axis: ${axis}):\n`
+        );
+
+        fs.appendFileSync('code.txt', '\n');
+
+        for (let i = 0; i < amount; i++) {
+          xyz.y += spacing;
+          fs.appendFileSync(
+            'code.txt',
+            `set(${xyz.pieceNumber},${xyz.x},${xyz.y},${xyz.z},${xyz.angle})\n`
+          );
+        }
+        fs.appendFileSync('code.txt', '\n');
+        console.log('Generating completed');
+        break;
+      case 'z':
+        fs.appendFileSync(
+          'code.txt',
+          `Generated ${amount} spikes (axis: ${axis}):\n`
+        );
+
+        fs.appendFileSync('code.txt', '\n');
+
+        for (let i = 0; i < amount; i++) {
+          xyz.z += spacing;
+          fs.appendFileSync(
+            'code.txt',
+            `set(${xyz.pieceNumber},${xyz.x},${xyz.y},${xyz.z},${xyz.angle})\n`
+          );
+        }
+        fs.appendFileSync('code.txt', '\n');
+        console.log('Generating completed');
+        break;
+      default:
+        console.log('Please use appropriate axis');
     }
   }
 }
