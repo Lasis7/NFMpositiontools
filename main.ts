@@ -1,4 +1,4 @@
-import { generateSpike, emptyFile } from './postoolclass';
+import { generateSpike, emptyFile } from './tools/spike';
 
 /*
 To run functions, uncomment them (ctrl + /) and use the line below in the terminal
@@ -13,4 +13,4 @@ For whatever reason manually removing the codelines from the file breaks the str
 
 // emptyFile();
 
-// generateSpike('set(37,-14250,24950,90)p', 'z', 100, 3);
+generateSpike('set(37,-17488,103188,90)', 'y', 1200, 7);
