@@ -1,12 +1,10 @@
 {
-  "dependencies": {
-    "@types/node": "^22.13.1"
-  },
   "name": "nfm_positiontool",
   "type": "module",
   "version": "1.0.0",
   "main": "index.js",
   "devDependencies": {
+    "@types/node": "^26.2.0",
     "tsx": "^4.19.2"
   },
   "scripts": {
