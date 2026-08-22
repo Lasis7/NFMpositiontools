@@ -1,10 +1,10 @@
 import * as fs from 'fs';
 import { parseLine } from '../general/parseline';
-import { AllAxles } from '../shared/types';
+import { AllAxes } from '../shared/types';
 
 function writeToFile(
   xyz: { [key: string]: number },
-  axis: AllAxles,
+  axis: AllAxes,
   spacing: number,
   amount: number,
 ) {
@@ -26,7 +26,7 @@ function writeToFile(
     } else {
       fs.appendFileSync(
         'code.txt',
-        `set(${xyz.pieceNumber},${xyz.x},${xyz.y},${xyz.z},${xyz.angle})\n`,
+        `set(${xyz.pieceNumber},${xyz.x},${xyz.z},${xyz.angle},${xyz.y})\n`,
       );
     }
   }
@@ -36,33 +36,28 @@ function writeToFile(
 
 export function generateSpike(
   codeline: string,
-  axis: AllAxles,
+  axis: AllAxes,
   spacing: number,
   amount: number,
 ) {
   if (amount < 1) {
-    console.error('Amount needs to be atleast 1');
-    // If given amount is invalid, end here
-    return;
-  } else {
-    const xyz = parseLine(codeline);
-    // If parseLine returns -1, the given codeline was invalid
-    if (xyz === -1) {
-      return console.error('Invalid codeline');
-    }
-    switch (axis) {
-      case 'x':
-        writeToFile(xyz, 'x', spacing, amount);
-        break;
-      case 'y':
-        writeToFile(xyz, 'y', spacing, amount);
-        break;
-      case 'z':
-        writeToFile(xyz, 'z', spacing, amount);
-        break;
-      default:
-        // If given axis is invalid
-        console.error('Please use appropriate axis');
-    }
+    return console.error('Amount needs to be atleast 1');
+  }
+
+  const xyz = parseLine(codeline);
+  // If parseLine returns -1, the given codeline was invalid
+  if (xyz === -1) {
+    return console.error('Invalid codeline');
+  }
+  switch (axis) {
+    case 'x':
+      writeToFile(xyz, 'x', spacing, amount);
+      break;
+    case 'y':
+      writeToFile(xyz, 'y', spacing, amount);
+      break;
+    case 'z':
+      writeToFile(xyz, 'z', spacing, amount);
+      break;
   }
 }

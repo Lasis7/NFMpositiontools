@@ -1,6 +1,6 @@
-export type AllAxles = 'x' | 'y' | 'z';
+export type AllAxes = 'x' | 'y' | 'z';
 
-export type XYAxles = Omit<AllAxles, 'y'>;
+export type XYAxes = Omit<AllAxes, 'y'>;
 
 export type xDir = 'rl' | 'rr' | 'll' | 'lr';
 
