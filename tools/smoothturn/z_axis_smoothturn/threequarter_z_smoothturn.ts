@@ -1,7 +1,11 @@
 import * as fs from 'fs';
-import { parseLine } from '../../../general/parseline';
+import { parseLine } from '../../general/parseline';
+import { xvalues, zvalues } from '../../shared/initialZSmoothValues';
+import { XYAxles } from '../../shared/types';
+import { zDirections } from '../../shared/directions';
+import { zDir } from '../../shared/types';
 
-function generateFullValues(array: number[], axis: string) {
+function generateFullValues(array: number[], axis: XYAxles) {
   const copy = [...array];
 
   axis === 'x' ? copy.push(1060) : copy.push(0);
@@ -18,26 +22,18 @@ function generateFullValues(array: number[], axis: string) {
   return fullArray;
 }
 
-function writeToFile(xyz: { [key: string]: number }, direction: string) {
+function writeToFile(xyz: { [key: string]: number }, direction: zDir) {
   fs.appendFileSync(
     'code.txt',
-    `generated a smooth turn, direction ${direction}\n`
+    `generated a smooth turn, direction ${direction}\n`,
   );
 
   fs.appendFileSync('code.txt', '\n');
 
-  const xvalues: number[] = [
-    40, 120, 190, 250, 335, 405, 460, 520, 580, 640, 690, 740, 780, 830, 900,
-    920, 960, 990, 1020, 1030, 1050, 1050,
-  ];
-  const zvalues: number[] = [
-    1050, 1050, 1040, 1020, 1000, 980, 940, 900, 860, 810, 770, 710, 650, 600,
-    560, 490, 430, 360, 290, 220, 150, 77,
-  ];
+  const fullValuesx = generateFullValues(xvalues, 'x');
+  const fullValuesz = generateFullValues(zvalues, 'z');
 
   if (direction === 'fr') {
-    const fullValuesx = generateFullValues(xvalues, 'x');
-    const fullValuesz = generateFullValues(zvalues, 'z');
     for (let i = 0; i < fullValuesx.length; i++) {
       xyz.x += fullValuesx[i];
       xyz.z += fullValuesz[i];
@@ -46,18 +42,16 @@ function writeToFile(xyz: { [key: string]: number }, direction: string) {
       if (xyz.y === 0) {
         fs.appendFileSync(
           'code.txt',
-          `set(${xyz.pieceNumber},${xyz.x},${xyz.z},${xyz.angle})\n`
+          `set(${xyz.pieceNumber},${xyz.x},${xyz.z},${xyz.angle})\n`,
         );
       } else {
         fs.appendFileSync(
           'code.txt',
-          `set(${xyz.pieceNumber},${xyz.x},${xyz.y},${xyz.z},${xyz.angle})\n`
+          `set(${xyz.pieceNumber},${xyz.x},${xyz.y},${xyz.z},${xyz.angle})\n`,
         );
       }
     }
   } else if (direction === 'fl') {
-    const fullValuesx = generateFullValues(xvalues, 'x');
-    const fullValuesz = generateFullValues(zvalues, 'z');
     for (let i = 0; i < fullValuesx.length; i++) {
       xyz.x -= fullValuesx[i];
       xyz.z += fullValuesz[i];
@@ -66,18 +60,16 @@ function writeToFile(xyz: { [key: string]: number }, direction: string) {
       if (xyz.y === 0) {
         fs.appendFileSync(
           'code.txt',
-          `set(${xyz.pieceNumber},${xyz.x},${xyz.z},${xyz.angle})\n`
+          `set(${xyz.pieceNumber},${xyz.x},${xyz.z},${xyz.angle})\n`,
         );
       } else {
         fs.appendFileSync(
           'code.txt',
-          `set(${xyz.pieceNumber},${xyz.x},${xyz.y},${xyz.z},${xyz.angle})\n`
+          `set(${xyz.pieceNumber},${xyz.x},${xyz.y},${xyz.z},${xyz.angle})\n`,
         );
       }
     }
   } else if (direction === 'br') {
-    const fullValuesx = generateFullValues(xvalues, 'x');
-    const fullValuesz = generateFullValues(zvalues, 'z');
     for (let i = 0; i < fullValuesx.length; i++) {
       xyz.x -= fullValuesx[i];
       xyz.z -= fullValuesz[i];
@@ -86,18 +78,17 @@ function writeToFile(xyz: { [key: string]: number }, direction: string) {
       if (xyz.y === 0) {
         fs.appendFileSync(
           'code.txt',
-          `set(${xyz.pieceNumber},${xyz.x},${xyz.z},${xyz.angle})\n`
+          `set(${xyz.pieceNumber},${xyz.x},${xyz.z},${xyz.angle})\n`,
         );
       } else {
         fs.appendFileSync(
           'code.txt',
-          `set(${xyz.pieceNumber},${xyz.x},${xyz.y},${xyz.z},${xyz.angle})\n`
+          `set(${xyz.pieceNumber},${xyz.x},${xyz.y},${xyz.z},${xyz.angle})\n`,
         );
       }
     }
+    // direction === bl
   } else {
-    const fullValuesx = generateFullValues(xvalues, 'x');
-    const fullValuesz = generateFullValues(zvalues, 'z');
     for (let i = 0; i < fullValuesx.length; i++) {
       xyz.x += fullValuesx[i];
       xyz.z -= fullValuesz[i];
@@ -106,12 +97,12 @@ function writeToFile(xyz: { [key: string]: number }, direction: string) {
       if (xyz.y === 0) {
         fs.appendFileSync(
           'code.txt',
-          `set(${xyz.pieceNumber},${xyz.x},${xyz.z},${xyz.angle})\n`
+          `set(${xyz.pieceNumber},${xyz.x},${xyz.z},${xyz.angle})\n`,
         );
       } else {
         fs.appendFileSync(
           'code.txt',
-          `set(${xyz.pieceNumber},${xyz.x},${xyz.y},${xyz.z},${xyz.angle})\n`
+          `set(${xyz.pieceNumber},${xyz.x},${xyz.y},${xyz.z},${xyz.angle})\n`,
         );
       }
     }
@@ -120,16 +111,15 @@ function writeToFile(xyz: { [key: string]: number }, direction: string) {
 
 export function generatethreeQuarterzSmoothTurn(
   codeline: string,
-  direction: string
+  direction: zDir,
 ) {
-  const directions: string[] = ['fl', 'fr', 'bl', 'br'];
-  if (!directions.includes(direction)) {
-    return console.log('Direction must be fr, fl, br or br');
+  if (zDirections.includes(direction)) {
+    return console.error('Direction must be fr, fl, br or br');
   }
   const xyz = parseLine(codeline);
 
   if (xyz === -1) {
-    return console.log('Invalid codeline');
+    return console.error('Invalid codeline');
   }
 
   switch (direction) {
